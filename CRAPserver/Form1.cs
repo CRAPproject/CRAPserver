@@ -12,6 +12,8 @@ namespace CRAPserver
 {
     public partial class Form1 : Form
     {
+        HTTPServer server;
+
         public Form1()
         {
             InitializeComponent();
@@ -19,7 +21,13 @@ namespace CRAPserver
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            server = new HTTPServer();
+        }
 
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            server.Start();
+            //textLog.Text.
         }
     }
 }
