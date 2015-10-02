@@ -59,108 +59,25 @@ namespace CRAPserver
         DataRow temp = Row[0];
         temp[Coloum] = value;
     }
-
-        private bool saveNodeTable(string location, DataTable NodeTable)
+        public void addNode(string ID, string Type)
         {
-            // saves Node table to XML 
-            bool success;
-            try
-            {
-                NodeTable.WriteXml(location);
-                success = true;
-            }
-            catch
-            {
-                Console.WriteLine("Unable to save Node Table");
-                success = false;
-            }
-            return success;
-        }
-        private bool saveTypeTable(string location, DataTable NodeTable)
-        {
-            // saves Node table to XML 
-            bool success;
-            try
-            {
-                NodeTable.WriteXml(location);
-                success = true;
-            }
-            catch
-            {
-                Console.WriteLine("Unable to save Type Table");
-                success = false;
-            }
-            return success;
-        }
-        private bool saveStateTable(string location, DataTable NodeTable)
-        {
-            // saves State table to XML 
-            bool success;
-            try
-            {
-                NodeTable.WriteXml(location);
-                success = true;
-            }
-            catch
-            {
-                Console.WriteLine("Unable to save State Table");
-                success = false;
-            }
-            return success;
-        }
-        private DataTable LoadNodeTable(string location)
-        {
-            DataTable TempNodeTable = new DataTable();
+            DataRow row = nodes.NewRow();
+            row["ID"] = ID;
+            row["Type"] = Type;
+            nodes.Rows.Add(row);
 
-            try
-            {
-                TempNodeTable.ReadXml(location);
-            }
-            catch
-            {
-                Console.WriteLine("Restore of Node table fail");
-            }
-            return TempNodeTable;
         }
-
-        private DataTable LoadTypesTable(string location)
-        {
-            DataTable TempTypesTable = new DataTable();
-
-            try
-            {
-                TempTypesTable.ReadXml(location);
-            }
-            catch
-            {
-                Console.WriteLine("Restore of Node table fail");
-            }
-            return TempTypesTable;
-        }
-
-        private DataTable LoadStateTable(string location)
-        {
-            DataTable TempStateTable = new DataTable();
-
-            try
-            {
-                TempStateTable.ReadXml(location);
-            }
-            catch
-            {
-                Console.WriteLine("Restore of Node table fail");
-            }
-            return TempStateTable;
-        }
+      
         public bool saveAll(string Folder)
         {
             ///<summary> Saves All tables into the Folder given </summary>
             bool success;
             try
             {
-                saveNodeTable(Folder + "NodeData.csv", nodes);
-                saveStateTable(Folder + "StateData.csv", state);
-                saveTypeTable(Folder + "TypeData.csv", types);
+                FileHanderling SaveHandler = new FileHanderling();
+                SaveHandler.saveNodeTable(Folder + "NodeData.csv", nodes);
+                SaveHandler.saveStateTable(Folder + "StateData.csv", state);
+                SaveHandler.saveTypeTable(Folder + "TypeData.csv", types);
                 success = true;
             }
             catch
@@ -171,9 +88,11 @@ namespace CRAPserver
         }
         public bool LoadAll(string Folder)
         {
-            nodes = LoadNodeTable(Folder + "NodeData.csv");
-            state = LoadStateTable(Folder + "StateData.csv");
-            types = LoadTypesTable(Folder + "TypeData.csv");
+            ///<summary> loads All tables into the Folder given </summary>
+            FileHanderling LoadHandler = new FileHanderling();
+            nodes = LoadHandler.LoadNodeTable(Folder + "NodeData.csv");
+            state = LoadHandler.LoadStateTable(Folder + "StateData.csv");
+            types = LoadHandler.LoadTypesTable(Folder + "TypeData.csv");
             return true;
         
         }
