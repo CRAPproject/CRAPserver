@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace CRAPserver
 {
-    public delegate void AddToLogFunctionDelegate(string lineDel);
+    private delegate void AddToLogFunctionDelegate(string lineDel);
 
     public partial class MainView : Form
     {
@@ -20,9 +20,12 @@ namespace CRAPserver
 
         public MainView()
         {
+            // Set up the database
             dgvNodes = new DataGridView();
             dgvTypes = new DataGridView();
             dgvState = new DataGridView();
+
+            // Link the tables to the gui
             dgvNodes.DataSource = dataObject.nodes;
             dgvTypes.DataSource = dataObject.types;
             dgvState.DataSource = dataObject.state;
@@ -30,7 +33,7 @@ namespace CRAPserver
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void MainView_Load(object sender, EventArgs e)
         {
             server = new HTTPServer(this, addToLogDelegate);
         }

@@ -8,12 +8,11 @@ using System.Threading.Tasks;
 
 namespace CRAPserver
 {
-
     public class HTTPServer
     {
         private HttpListener listener;
         private MainView mainViewForm;
-        public AddToLogFunctionDelegate addToLogDelegate;
+        private AddToLogFunctionDelegate addToLogDelegate;
 
         public HTTPServer(MainView mv, AddToLogFunctionDelegate del)
         {
@@ -45,9 +44,7 @@ namespace CRAPserver
             listener.BeginGetContext(new AsyncCallback(Callback), listener);
         }
 
-        /* 
-         * Called when a URL is requested
-         */
+        // Called when a URL is requested
         private void Callback(IAsyncResult result)
         {
             HttpListenerContext context = null;
@@ -84,11 +81,12 @@ namespace CRAPserver
                 TextReader tr = new StreamReader(page);
                 string msg = tr.ReadToEnd();
 
-                // Put the file in the buffer, and send to the client
+                // Put the file in the buffer
                 buffer = Encoding.UTF8.GetBytes(msg);
                 mainViewForm.Invoke(addToLogDelegate, "Access denied page served.");
             }
 
+            // Send the buffer to the client
             response.ContentLength64 = buffer.Length;
             Stream st = response.OutputStream;
             st.Write(buffer, 0, buffer.Length);

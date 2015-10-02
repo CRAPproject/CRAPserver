@@ -119,7 +119,7 @@
             this.Controls.Add(this.btnStart);
             this.Name = "MainView";
             this.Text = "CRAPServer v0.01";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.MainView_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvNodes)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTypes)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvState)).EndInit();
