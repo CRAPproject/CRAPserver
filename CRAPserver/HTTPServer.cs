@@ -62,21 +62,40 @@ namespace CRAPserver
 
             AsyncProcessing(listener);
 
-            // Create file path
-            string page = Directory.GetCurrentDirectory() + context.Request.Url.LocalPath;
+            // Extract request and serve up an error page if not json
+            string jsonRequest = context.Request.Url.LocalPath;
+            byte[] buffer = null;
 
-            // Read file
-            TextReader tr = new StreamReader(page);
-            string msg = tr.ReadToEnd();
+            if (jsonRequest.Length == 7 && jsonRequest.Substring(0, 7).Equals("/a.crap"))
+            {
+                string page = Directory.GetCurrentDirectory() + "\\index2.html";
+                // Read file
+                TextReader tr = new StreamReader(page);
+                string msg = tr.ReadToEnd();
 
-            // Put the file in the buffer, and send to the client
-            byte[] buffer = Encoding.UTF8.GetBytes(msg);
+                // Put the file in the buffer, and send to the client
+                buffer = Encoding.UTF8.GetBytes(msg);
+                mainViewForm.Invoke(addToLogDelegate, "Legitimate request made.");
+            }
+            else
+            {
+                string page = Directory.GetCurrentDirectory() + "\\accessdenied.html";
+                // Read file
+                TextReader tr = new StreamReader(page);
+                string msg = tr.ReadToEnd();
+
+                // Put the file in the buffer, and send to the client
+                buffer = Encoding.UTF8.GetBytes(msg);
+                mainViewForm.Invoke(addToLogDelegate, "Access denied page served.");
+            }
+
             response.ContentLength64 = buffer.Length;
             Stream st = response.OutputStream;
             st.Write(buffer, 0, buffer.Length);
 
             context.Response.Close();
         }
-
     }
+
 }
+

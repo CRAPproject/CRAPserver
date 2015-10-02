@@ -15,10 +15,17 @@ namespace CRAPserver
     public partial class MainView : Form
     {
         HTTPServer server;
+        Data dataObject = new Data();
         public AddToLogFunctionDelegate addToLogDelegate;
 
         public MainView()
         {
+            dgvNodes = new DataGridView();
+            dgvTypes = new DataGridView();
+            dgvState = new DataGridView();
+            dgvNodes.DataSource = dataObject.nodes;
+            dgvTypes.DataSource = dataObject.types;
+            dgvState.DataSource = dataObject.state;
             addToLogDelegate = new AddToLogFunctionDelegate(addToLog);
             InitializeComponent();
         }
@@ -41,6 +48,11 @@ namespace CRAPserver
         private void btnStop_Click(object sender, EventArgs e)
         {
             server.Stop();
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
     }
