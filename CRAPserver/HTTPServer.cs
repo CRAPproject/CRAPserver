@@ -8,25 +8,34 @@ using System.Threading.Tasks;
 
 namespace CRAPserver
 {
+
     public class HTTPServer
     {
         private HttpListener listener;
+        private MainView mainViewForm;
+        public AddToLogFunctionDelegate addToLogDelegate;
 
-        public HTTPServer()
+        public HTTPServer(MainView mv, AddToLogFunctionDelegate del)
         {
+            // Creates new HTTP listener object
             listener = new HttpListener();
             listener.Prefixes.Add("http://localhost:8080/");
+
+            mainViewForm = mv;
+            addToLogDelegate = del;
         }
 
         public void Start()
         {
             listener.Start();
             AsyncProcessing(listener);
+            mainViewForm.Invoke(addToLogDelegate, "Server started.");
         }
 
         public void Stop()
         {
             listener.Stop();
+            mainViewForm.Invoke(addToLogDelegate, "Server stopped.");
         }
 
         private void AsyncProcessing(HttpListener listener)
@@ -45,20 +54,15 @@ namespace CRAPserver
                 return;
             context = listener.EndGetContext(result);
             AsyncProcessing(listener);
-            /* handle request */
-
+            mainViewForm.Invoke(addToLogDelegate, "Request recieved.");
             response = context.Response;
 
             string page = Directory.GetCurrentDirectory() + context.Request.Url.LocalPath;
-
-            if (page == string.Empty)
-                page = "index.html";
-
+            
             TextReader tr = new StreamReader(page);
             string msg = tr.ReadToEnd();
 
-
-            byte[] buffer = Encoding.UTF8.GetBytes(msg);
+                        byte[] buffer = Encoding.UTF8.GetBytes(msg);
 
             response.ContentLength64 = buffer.Length;
             Stream st = response.OutputStream;
