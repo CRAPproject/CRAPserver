@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CRAPserver
 {
-    class FileHanderling
+    class DatabaseFileHander
     {
         ///<summary> Contatins separate methods for saving and loading all datatypes </summary>
         /*public string[] LoadTypeData(string location)

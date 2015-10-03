@@ -74,7 +74,7 @@ namespace CRAPserver
             bool success;
             try
             {
-                FileHanderling SaveHandler = new FileHanderling();
+                DatabaseFileHander SaveHandler = new DatabaseFileHander();
                 SaveHandler.saveNodeTable(Folder + "NodeData.csv", nodes);
                 SaveHandler.saveStateTable(Folder + "StateData.csv", state);
                 SaveHandler.saveTypeTable(Folder + "TypeData.csv", types);
@@ -89,7 +89,7 @@ namespace CRAPserver
         public bool LoadAll(string Folder)
         {
             ///<summary> loads All tables into the Folder given </summary>
-            FileHanderling LoadHandler = new FileHanderling();
+            DatabaseFileHander LoadHandler = new DatabaseFileHander();
             nodes = LoadHandler.LoadNodeTable(Folder + "NodeData.csv");
             state = LoadHandler.LoadStateTable(Folder + "StateData.csv");
             types = LoadHandler.LoadTypesTable(Folder + "TypeData.csv");
