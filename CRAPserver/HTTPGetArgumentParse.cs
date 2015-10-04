@@ -21,10 +21,12 @@ namespace CRAPserver
             return Convert.ToInt32(getParameter("nodeid"));
         }
 
+        // Command = 0
+        // Update = 1
         public int getType()
         {
-            if (getParameter("type").Equals("request")) return 0;
-            else if (getParameter("type").Equals("command")) return 1;
+            if (getParameter("type").Equals("command")) return 0;
+            else if (getParameter("type").Equals("update")) return 1;
             else return -1;
         }
         

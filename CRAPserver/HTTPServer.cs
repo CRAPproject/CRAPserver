@@ -68,6 +68,17 @@ namespace CRAPserver
 
             if (LocalPathRequest.Length == 7 && LocalPathRequest.Substring(0, 7).Equals("/a.crap"))
             {
+                if (ParsedURI.getType() == 0)
+                {
+                    // Command recieved
+
+                }
+                else if (ParsedURI.getType() == 1)
+                {
+                    // Update recieved
+
+                }
+
                 // Put the file in the buffer, and send to the client
                 buffer = Encoding.UTF8.GetBytes("<html><body><h1>NodeID: " + ParsedURI.getNodeID().ToString() + "</h></body></html>");
                 mainViewForm.Invoke(addToLogDelegate, "Legitimate request made.");
