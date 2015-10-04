@@ -20,15 +20,6 @@ namespace CRAPserver
 
         public MainView()
         {
-            // Set up the database
-            dgvNodes = new DataGridView();
-            dgvTypes = new DataGridView();
-            dgvState = new DataGridView();
-
-            // Link the tables to the gui
-            dgvNodes.DataSource = dataObject.nodes;
-            dgvTypes.DataSource = dataObject.types;
-            dgvState.DataSource = dataObject.state;
             addToLogDelegate = new AddToLogFunctionDelegate(addToLog);
             InitializeComponent();
         }
