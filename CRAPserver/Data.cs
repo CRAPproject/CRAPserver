@@ -36,7 +36,7 @@ namespace CRAPserver
             }
 
         }
-        private static void CreateTables( SQLiteConnection Connection)
+        private static void CreateTables(SQLiteConnection Connection)
         {
             //Create Nodes Table
             string NodesTable = "create table NodesTable (NodeID int, Type int, IP text, Name text)";
@@ -61,19 +61,21 @@ namespace CRAPserver
         {
             try
             {
-            string Add = "insert into NodesTable (NodeID, Type, IP, Name) values (" +NodeID.ToString() +"," +Type.ToString() +","+IP +","+name+")";
-            SQLiteCommand command = new SQLiteCommand(Add, SQLiteConnection);
-            command.ExecuteNonQuery();
-            return 1;
+                string Add = "insert into NodesTable (NodeID, Type, IP, Name) values (" + NodeID.ToString() + "," + Type.ToString() + ", \"" + IP + "\", \"" + name + "\")";
+                Console.WriteLine(Add);
+                SQLiteCommand command = new SQLiteCommand(Add, SQLiteConnection);
+                command.ExecuteNonQuery();
+                return 1;
             }
-            catch
+            catch(SQLiteException e)
             {
-            return 0;
+                Console.WriteLine(e.Message);
+                return 0;
             }
         }
         public string getIPAddress(int NodeID)
         {
-            string getIP = "select * from NodeTable where NodeID = " + NodeID.ToString();
+            string getIP = "select * from NodesTable where NodeID = " + NodeID.ToString();
             SQLiteCommand command = new SQLiteCommand(getIP, SQLiteConnection);
             SQLiteDataReader reader = command.ExecuteReader();
             reader.Read();
