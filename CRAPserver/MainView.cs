@@ -27,6 +27,9 @@ namespace CRAPserver
         private void MainView_Load(object sender, EventArgs e)
         {
             server = new HTTPServer(this, addToLogDelegate);
+            Console.WriteLine("Tom is gay");
+            Data testData = new Data();
+            testData.AddNode(12345678, 87654321, "192.168.1.1", "Dave the CRAPnode");
         }
 
         private void btnStart_Click(object sender, EventArgs e)

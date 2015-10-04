@@ -14,7 +14,6 @@ namespace CRAPserver
         ~Data()
         {
             SQLiteConnection.Close();
-
         }
         string DatabaseFile = "CRAPData.sqlite";
         SQLiteConnection SQLiteConnection;
