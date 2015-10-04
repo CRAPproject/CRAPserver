@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace CRAPserver
 {
-    private delegate void AddToLogFunctionDelegate(string lineDel);
+    public delegate void AddToLogFunctionDelegate(string lineDel);
 
     public partial class MainView : Form
     {

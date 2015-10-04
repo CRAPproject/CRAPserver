@@ -1,4 +1,5 @@
-﻿using System;using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -48,17 +49,17 @@ namespace CRAPserver
             string value;
             DataRow[] Row;
             Row = state.Select("NodeID = " + Node);
-           DataRow temp = Row[0];
-           value = temp[Coloum].ToString();
+            DataRow temp = Row[0];
+            value = temp[Coloum].ToString();
             return value;
         }
         public void SetStateData(int Node, string Coloum, string value)
-    {
-        DataRow[] Row;
-        Row = state.Select("NodeID = " + Node);
-        DataRow temp = Row[0];
-        temp[Coloum] = value;
-    }
+        {
+            DataRow[] Row;
+            Row = state.Select("NodeID = " + Node);
+            DataRow temp = Row[0];
+            temp[Coloum] = value;
+        }
         public void addNode(string ID, string Type)
         {
             DataRow row = nodes.NewRow();
@@ -67,7 +68,7 @@ namespace CRAPserver
             nodes.Rows.Add(row);
 
         }
-      
+
         public bool saveAll(string Folder)
         {
             ///<summary> Saves All tables into the Folder given </summary>
@@ -94,8 +95,8 @@ namespace CRAPserver
             state = LoadHandler.LoadStateTable(Folder + "StateData.csv");
             types = LoadHandler.LoadTypesTable(Folder + "TypeData.csv");
             return true;
-        
+
         }
-       
+
     }
 }
