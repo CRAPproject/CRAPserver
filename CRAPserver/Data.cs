@@ -1,102 +1,78 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.SQLite;
 
 namespace CRAPserver
 {
     class Data
     {
-        public DataTable nodes;
-        public DataTable types;
-        public DataTable state;
+        ~Data()
+        {
+            CRAPCOnnection.Close();
 
+        }
+        string DatabaseFile = "CRAPData.sqlite";
+        SQLiteConnection CRAPCOnnection;
         public Data()
         {
-            nodes = newNodeTable();
-            types = newTypesTable();
-            state = newStateTable();
-        }
-
-        private DataTable newNodeTable()
-        {
-            DataTable table = new DataTable();
-            table.Columns.Add("ID", typeof(int));
-            table.Columns.Add("Type", typeof(int));
-            return table;
-        }
-
-        private DataTable newTypesTable()
-        {
-            DataTable table = new DataTable();
-            table.Columns.Add("ID", typeof(int));
-            table.Columns.Add("Temperature", typeof(Boolean));
-            return table;
-        }
-
-        private DataTable newStateTable()
-        {
-            DataTable table = new DataTable();
-            table.Columns.Add("NodeID", typeof(int));
-            table.Columns.Add("Temperature", typeof(string));
-            return table;
-        }
-
-        public string GetStateData(int Node, string Coloum)
-        {
-            string value;
-            DataRow[] Row;
-            Row = state.Select("NodeID = " + Node);
-            DataRow temp = Row[0];
-            value = temp[Coloum].ToString();
-            return value;
-        }
-        public void SetStateData(int Node, string Coloum, string value)
-        {
-            DataRow[] Row;
-            Row = state.Select("NodeID = " + Node);
-            DataRow temp = Row[0];
-            temp[Coloum] = value;
-        }
-        public void addNode(string ID, string Type)
-        {
-            DataRow row = nodes.NewRow();
-            row["ID"] = ID;
-            row["Type"] = Type;
-            nodes.Rows.Add(row);
+            //Check to see if database file excists
+            if (File.Exists(DatabaseFile))
+            {
+                //create connection
+                CRAPCOnnection = new SQLiteConnection("Data Source =" + DatabaseFile + ";Version=3;");
+            }
+            else
+            {
+                //create new databse file
+                SQLiteConnection.CreateFile(DatabaseFile);
+                CRAPCOnnection = new SQLiteConnection("Data Source =" + DatabaseFile + ";Version=3;");
+                CreateTables(CRAPCOnnection);
+            }
 
         }
-
-        public bool saveAll(string Folder)
+        private static void CreateTables( SQLiteConnection Connection)
         {
-            ///<summary> Saves All tables into the Folder given </summary>
-            bool success;
+            //Create Nodes Table
+            string NodesTable = "create table NodesTable (NodeID int, Type int, IP text, Name text";
+            //Create Type Table
+            string TypesTable = "create table TypeTable (TypeID int, Discription text)";
+            //create States
+            string StatesTable = "create table StatesTable(StateID int, NodeID varchar(50), StateType1 varchar(255), StateType2 varchar(255),StateType3 varchar(255), State varchar(255), TimeStamp DateTime ";
+            //create Messagestack
+            string MesageStack = "create table MessageStack (NodeID varchar(50), message varchar(255), ttl int)";
+            //excute tables
+            SQLiteCommand NodeTableCommand = new SQLiteCommand(NodesTable, Connection);
+            SQLiteCommand TypeTableCommand = new SQLiteCommand(TypesTable, Connection);
+            SQLiteCommand StatesTableCommand = new SQLiteCommand(StatesTable, Connection);
+            SQLiteCommand MessageStackCommand = new SQLiteCommand(MesageStack, Connection);
+
+        }
+        public int AddNode(int NodeID, int Type, string IP, string name)
+        {
             try
             {
-                DatabaseFileHander SaveHandler = new DatabaseFileHander();
-                SaveHandler.saveNodeTable(Folder + "NodeData.csv", nodes);
-                SaveHandler.saveStateTable(Folder + "StateData.csv", state);
-                SaveHandler.saveTypeTable(Folder + "TypeData.csv", types);
-                success = true;
+            string Add = "insert into NodesTable (NodeID, Type, IP, Name) values (" +NodeID.ToString() +"," +Type.ToString() +","+IP +","+name+")";
+            SQLiteCommand command = new SQLiteCommand(Add, CRAPCOnnection);
+            command.ExecuteNonQuery();
+            return 1;
             }
             catch
             {
-                success = false;
+            return 0;
             }
-            return success;
         }
-        public bool LoadAll(string Folder)
+        public string getIPAddress(int NodeID)
         {
-            ///<summary> loads All tables into the Folder given </summary>
-            DatabaseFileHander LoadHandler = new DatabaseFileHander();
-            nodes = LoadHandler.LoadNodeTable(Folder + "NodeData.csv");
-            state = LoadHandler.LoadStateTable(Folder + "StateData.csv");
-            types = LoadHandler.LoadTypesTable(Folder + "TypeData.csv");
-            return true;
-
+            string getIP = "select * from NodeTable where NodeID = " + NodeID.ToString();
+            SQLiteCommand command = new SQLiteCommand(getIP, CRAPCOnnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+            reader.Read();
+            return reader["IP"].ToString();
         }
-
     }
 }
