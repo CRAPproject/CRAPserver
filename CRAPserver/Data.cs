@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
+using System.Net;
 
 namespace CRAPserver
 {
@@ -103,13 +104,13 @@ namespace CRAPserver
                 return 0;
             }
         }
-        public string getIPAddress(int NodeID)
+        public IPAddress getIPAddress(int NodeID)
         {
             string getIP = "select * from NodesTable where NodeID = " + NodeID.ToString();
             SQLiteCommand command = new SQLiteCommand(getIP, SQLiteConnection);
             SQLiteDataReader reader = command.ExecuteReader();
             reader.Read();
-            return reader["IP"].ToString();
+            return IPAddress.Parse(reader["IP"].ToString());
         }
         public int AddMessageToTable(MessageObject stateobj)
         {
