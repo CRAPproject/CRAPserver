@@ -27,7 +27,7 @@ namespace CRAPserver
             Application.Run(new MainView());
             
             Data testData = new Data();
-            testData.AddNode(12345678, 87654321, "192.168.1.1", "Dave the CRAPnode");
+            int test = testData.AddNode(12345678, 87654321, "192.168.1.1", "Dave the CRAPnode");
         }
     }
 }
