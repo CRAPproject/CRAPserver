@@ -24,7 +24,7 @@ namespace CRAPserver
             addToLogDelegate = new AddToLogFunctionDelegate(addToLog);
             InitializeComponent();
 
-            testFunction();
+            //testFunction();
         }
 
         private void MainView_Load(object sender, EventArgs e)

@@ -29,7 +29,17 @@ namespace CRAPserver
             statetype4 = "";
             statetype5 = "";
             statetype6 = "";
+        }
 
+        public MessageObject(int nodeIdIn, string st1, string st2, string st3, string st4, string st5, string st6, string state)
+        {
+            nodeid = nodeIdIn;
+            statetype1 = st1;
+            statetype2 = st2;
+            statetype3 = st3;
+            statetype4 = st4;
+            statetype5 = st5;
+            statetype6 = st6;
         }
 
         public string Json(Data data)

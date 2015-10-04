@@ -89,9 +89,9 @@ namespace CRAPserver
                 if (ParsedURI.getType() == 0)
                 {
                     // Command recieved
-                    dataObject.GetIPAddress(ParsedURI.getNodeID());
-                    IPAddress ipAddress = 
-                    Socket client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    sendRTS(ParsedURI.getNodeID());
+                    int numberOfParameters = ParsedURI.getParameterList().Length;
+                    MessageObject recievedMessage = new MessageObject(ParsedURI.getNodeID, )
                 }
                 else if (ParsedURI.getType() == 1)
                 {
@@ -121,6 +121,22 @@ namespace CRAPserver
             st.Write(buffer, 0, buffer.Length);
             context.Response.Close();
         }
+
+
+        private void sendRTS(int nodeID)
+        {
+            IPAddress NodeIP = dataObject.getIPAddress(nodeID);
+            TcpClient tcpclnt = new TcpClient();
+            Console.WriteLine("Connecting to... " + NodeIP.ToString());
+            tcpclnt.Connect(NodeIP.ToString(), 6170);
+
+            Stream stm = tcpclnt.GetStream();
+            ASCIIEncoding asen = new ASCIIEncoding();
+            byte[] ba = asen.GetBytes("{status:rts}");
+            stm.Write(ba, 0, ba.Length);
+            tcpclnt.Close();
+        }
+
     }
 
 }

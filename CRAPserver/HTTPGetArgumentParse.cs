@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -25,9 +26,18 @@ namespace CRAPserver
         // Update = 1
         public int getType()
         {
-            if (getParameter("type").Equals("command")) return 0;
-            else if (getParameter("type").Equals("update")) return 1;
-            else return -1;
+            int returnValue = -1;
+            if (getParameter("type").Equals("command"))
+            {
+                Console.WriteLine("Command recieved");
+                returnValue = 0;
+            }
+            else if (getParameter("type").Equals("update"))
+            {
+                Console.WriteLine("Update recieved");
+                returnValue = 1;
+            }
+            return returnValue;
         }
         
         public string getParameter(string argument)
@@ -44,6 +54,12 @@ namespace CRAPserver
                 Console.WriteLine(e.ToString());
             }
             return returnString;
+        }
+
+        public string[] getParameterList()
+        {
+            var queryString = messageToBeParsed.Substring(messageToBeParsed.IndexOf('?')).Split('#')[0];
+            return Regex.Split(queryString, "(%w+)=(%w+)&*");
         }
     }
 }
