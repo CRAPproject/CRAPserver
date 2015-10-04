@@ -24,8 +24,8 @@ namespace CRAPserver
         private GetMessageDelegate getMessageDelegate;*/
 
         public HTTPServer(MainView mv, AddToLogFunctionDelegate delATLF, Data dat)
-            /*,
-            AddStateDelegate delAS, GetStateTypeDelegate delGST, AddNodeDelegate delAN, GetIPAddressDelegate delGIA, AddMessageToTableDelegate delAMTT, GetMessageDelegate delGM)*/
+        /*,
+        AddStateDelegate delAS, GetStateTypeDelegate delGST, AddNodeDelegate delAN, GetIPAddressDelegate delGIA, AddMessageToTableDelegate delAMTT, GetMessageDelegate delGM)*/
         {
             // Creates new HTTP listener object
             listener = new HttpListener();
@@ -91,7 +91,15 @@ namespace CRAPserver
                     // Command recieved
                     sendRTS(ParsedURI.getNodeID());
                     int numberOfParameters = ParsedURI.getParameterList().Length;
-                    MessageObject recievedMessage = new MessageObject(ParsedURI.getNodeID, )
+                    MessageObject recievedMessage = new MessageObject(ParsedURI.getNodeID(),
+                        ParsedURI.getParameter("st1"),
+                        ParsedURI.getParameter("st2"),
+                        ParsedURI.getParameter("st3"),
+                        ParsedURI.getParameter("st4"),
+                        ParsedURI.getParameter("st5"),
+                        ParsedURI.getParameter("st6"),
+                        ParsedURI.getParameter("state"));
+                    dataObject.AddMessageToTable(recievedMessage);
                 }
                 else if (ParsedURI.getType() == 1)
                 {

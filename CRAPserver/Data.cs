@@ -89,7 +89,7 @@ namespace CRAPserver
             reader.Read();
             return reader["StateType"].ToString();
         }
-        public string GetStateTypefromType(string StateType)
+        public string GetStateIDfromType(string StateType)
         {
             string Statetype = "select * from stateType where StateID = " + StateType;
             SQLiteCommand command = new SQLiteCommand(Statetype, SQLiteConnection);
