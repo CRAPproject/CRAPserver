@@ -16,7 +16,7 @@ namespace CRAPserver
             SQLiteConnection.Close();
         }
         string DatabaseFile = "CRAPData.sqlite";
-        SQLiteConnection SQLiteConnection;
+        public SQLiteConnection SQLiteConnection;
         public Data()
         {
             //Check to see if database file excists
@@ -45,7 +45,9 @@ namespace CRAPserver
             //create States
             string StatesTable = "create table StatesTable (StateID int, NodeID varchar(50), StateType1 varchar(255), StateType2 varchar(255),StateType3 varchar(255), State varchar(255), TimeStamp DateTime )";
             //create Messagestack
-            string MesageStack = "create table MessageStack (NodeID varchar(50), message varchar(255), ttl int)";
+            string MesageTable = "CREATE TABLE `MessageTable` (`NodeID`	varchar(50),`ttl`	int,`State_1`	TEXT,`State_2`	TEXT,`State_3`	TEXT,`State_4`	TEXT,`State_5`	TEXT,`State_6`	TEXT,`State`	TEXT)";
+            // create stateType
+            string stateType = "create table StateType (StateID int, StateType text, min int, max int)";
             //excute tables
             SQLiteCommand NodeTableCommand = new SQLiteCommand(NodesTable, Connection);
             NodeTableCommand.ExecuteNonQuery();
@@ -53,16 +55,44 @@ namespace CRAPserver
             TypeTableCommand.ExecuteNonQuery();
             SQLiteCommand StatesTableCommand = new SQLiteCommand(StatesTable, Connection);
             StatesTableCommand.ExecuteNonQuery();
-            SQLiteCommand MessageStackCommand = new SQLiteCommand(MesageStack, Connection);
+            SQLiteCommand MessageStackCommand = new SQLiteCommand(MesageTable, Connection);
             MessageStackCommand.ExecuteNonQuery();
+            SQLiteCommand stateTypeCommand = new SQLiteCommand(stateType, Connection);
+            stateTypeCommand.ExecuteNonQuery();
+            
 
+        }
+
+        public int AddState(int StateID, string StateType, int min,int max)
+        {
+            try
+            {
+                string Add = "insert into StateType (StateID, StateType, min, max) values (\"" + StateID.ToString() + " \", \"" + StateType.ToString() + " \", \"" + min.ToString() + "\", \"" + max.ToString() + "\")";
+                Console.WriteLine(Add);
+                SQLiteCommand command = new SQLiteCommand(Add, SQLiteConnection);
+                command.ExecuteNonQuery();
+                return 1;
+            }
+            catch (SQLiteException e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+
+        }
+        public string GetStateType(string StateID)
+        {
+            string Statetype = "select * from stateType where StateID = " + StateID;
+            SQLiteCommand command = new SQLiteCommand(Statetype, SQLiteConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+            reader.Read();
+            return reader["StateType"].ToString();
         }
         public int AddNode(int NodeID, int Type, string IP, string name)
         {
             try
             {
                 string Add = "insert into NodesTable (NodeID, Type, IP, Name) values (" + NodeID.ToString() + "," + Type.ToString() + ", \"" + IP + "\", \"" + name + "\")";
-                Console.WriteLine(Add);
                 SQLiteCommand command = new SQLiteCommand(Add, SQLiteConnection);
                 command.ExecuteNonQuery();
                 return 1;
@@ -80,6 +110,57 @@ namespace CRAPserver
             SQLiteDataReader reader = command.ExecuteReader();
             reader.Read();
             return reader["IP"].ToString();
+        }
+        public int AddMessageToTable(MessageObject stateobj)
+        {
+            try
+            {
+                string Add = "insert into MessageTable (NodeID, ttl, State_1, State_2, State_3, State_4, State_5, State_6, State) values (" + stateobj.nodeid + "," +stateobj.ttl+", \"" + stateobj.statetype1 + " \", \"" + stateobj.statetype2 + "\", \"" + stateobj.statetype3 + "\", \"" + stateobj.statetype4 + " \" , \"" + stateobj.statetype5 + " \", \"" + stateobj.statetype6 + " \", \"" + stateobj.state + " \")";
+                Console.WriteLine(Add);
+                SQLiteCommand command = new SQLiteCommand(Add, SQLiteConnection);
+                command.ExecuteNonQuery();
+                return 1;
+            }
+            catch (SQLiteException e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+
+        }
+        public MessageObject[] GetMessage(int NodeID)
+        {
+            // returns an array of messages
+            // calcaute the amount of results to know array size
+            string count = "select count(*) from MessageTable where NodeID = " + NodeID.ToString();
+            SQLiteCommand command = new SQLiteCommand(count, SQLiteConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+            reader.Read();
+            int arraysize = Int32.Parse(reader[0].ToString());
+            
+            //create object
+            MessageObject[] returnobj = new MessageObject[arraysize];
+            string getMessages = "select * from MessageTable where NodeID = " + NodeID.ToString();
+            SQLiteCommand commandobj = new SQLiteCommand(getMessages, SQLiteConnection);
+            SQLiteDataReader objReader = commandobj.ExecuteReader();
+            int i=0;
+            while (objReader.Read())
+           {
+               MessageObject read = new MessageObject();
+               read.nodeid = Int32.Parse(objReader["NodeID"].ToString());
+               read.ttl = Int32.Parse(objReader["ttl"].ToString());
+               read.statetype1 = objReader["State_1"].ToString();
+               read.statetype2 = objReader["State_2"].ToString();
+               read.statetype3 = objReader["State_3"].ToString();
+               read.statetype4 = objReader["State_4"].ToString();
+               read.statetype5 = objReader["State_5"].ToString();
+               read.statetype6 = objReader["State_6"].ToString();
+               read.state = objReader["State"].ToString();
+               returnobj[i] = read;
+                i++;
+           }
+            return returnobj;
+
         }
     }
 }

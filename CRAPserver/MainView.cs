@@ -27,10 +27,19 @@ namespace CRAPserver
         private void MainView_Load(object sender, EventArgs e)
         {
             server = new HTTPServer(this, addToLogDelegate);
-            Data testData = new Data();
-           int t= testData.AddNode(12345678, 87654321, "192.168.1.1", "Dave the CRAPnode");
-           string test = testData.getIPAddress(12345678);
-           Console.WriteLine("Ip Address =" + test);
+            Data data = new Data();
+            data.AddNode(1, 1, "192.168.1.1", "LEDBlinky");
+          //  data.AddState(0, "0", 0, 0);
+            int ti =data.AddState(1, "LED",0,0);
+            Console.WriteLine("addstate succes = " + ti.ToString());
+            MessageObject testobj = new MessageObject();
+            testobj.nodeid = 1;
+            testobj.state = "on";
+            testobj.statetype1 = "1";
+            data.AddMessageToTable(testobj);
+            MessageObject[] obj = data.GetMessage(1);
+            string t = obj[0].Json(data);
+            Console.WriteLine(t);
         }
 
         private void btnStart_Click(object sender, EventArgs e)
