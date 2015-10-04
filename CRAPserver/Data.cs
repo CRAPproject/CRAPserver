@@ -64,7 +64,7 @@ namespace CRAPserver
 
         }
 
-        public int AddState(int StateID, string StateType, int min,int max)
+        public int AddState(int StateID, string StateType, int min, int max)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace CRAPserver
                 command.ExecuteNonQuery();
                 return 1;
             }
-            catch(SQLiteException e)
+            catch (SQLiteException e)
             {
                 Console.WriteLine(e.Message);
                 return 0;
@@ -124,7 +124,7 @@ namespace CRAPserver
         {
             try
             {
-                string Add = "insert into MessageTable (NodeID, ttl, State_1, State_2, State_3, State_4, State_5, State_6, State) values (" + stateobj.nodeid + "," +stateobj.ttl+", \"" + stateobj.statetype1 + " \", \"" + stateobj.statetype2 + "\", \"" + stateobj.statetype3 + "\", \"" + stateobj.statetype4 + " \" , \"" + stateobj.statetype5 + " \", \"" + stateobj.statetype6 + " \", \"" + stateobj.state + " \")";
+                string Add = "insert into MessageTable (NodeID, ttl, State_1, State_2, State_3, State_4, State_5, State_6, State) values (" + stateobj.nodeid + "," + stateobj.ttl + ", \"" + stateobj.statetype1 + " \", \"" + stateobj.statetype2 + "\", \"" + stateobj.statetype3 + "\", \"" + stateobj.statetype4 + " \" , \"" + stateobj.statetype5 + " \", \"" + stateobj.statetype6 + " \", \"" + stateobj.state + " \")";
                 Console.WriteLine(Add);
                 SQLiteCommand command = new SQLiteCommand(Add, SQLiteConnection);
                 command.ExecuteNonQuery();
@@ -152,7 +152,7 @@ namespace CRAPserver
             string getMessages = "select * from MessageTable where NodeID = " + NodeID.ToString();
             SQLiteCommand commandobj = new SQLiteCommand(getMessages, SQLiteConnection);
             SQLiteDataReader objReader = commandobj.ExecuteReader();
-            int i=0;
+            int i = 0;
             while (objReader.Read())
            {
                MessageObject read = new MessageObject();

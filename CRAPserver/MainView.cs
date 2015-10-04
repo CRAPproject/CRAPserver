@@ -16,30 +16,21 @@ namespace CRAPserver
     {
         HTTPServer server;
         Data dataObject = new Data();
+
         public AddToLogFunctionDelegate addToLogDelegate;
 
         public MainView()
         {
             addToLogDelegate = new AddToLogFunctionDelegate(addToLog);
             InitializeComponent();
+
+            testFunction();
         }
 
         private void MainView_Load(object sender, EventArgs e)
         {
-            server = new HTTPServer(this, addToLogDelegate);
-            Data data = new Data();
-            data.AddNode(1, 1, "192.168.1.1", "LEDBlinky");
-          //  data.AddState(0, "0", 0, 0);
-            int ti =data.AddState(1, "LED",0,0);
-            Console.WriteLine("addstate succes = " + ti.ToString());
-            MessageObject testobj = new MessageObject();
-            testobj.nodeid = 1;
-            testobj.state = "on";
-            testobj.statetype1 = "1";
-            data.AddMessageToTable(testobj);
-            MessageObject[] obj = data.GetMessage(1);
-            string t = obj[0].Json(data);
-            Console.WriteLine(t);
+            server = new HTTPServer(this, addToLogDelegate, dataObject);
+
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -62,5 +53,21 @@ namespace CRAPserver
             Application.Exit();
         }
 
+        private void testFunction()
+        {
+            Data data = new Data();
+            data.AddNode(1, 1, "192.168.1.1", "LEDBlinky");
+            //  data.AddState(0, "0", 0, 0);
+            int ti = data.AddState(1, "LED", 0, 0);
+            Console.WriteLine("addstate success = " + ti.ToString());
+            MessageObject testobj = new MessageObject();
+            testobj.nodeid = 1;
+            testobj.statetype1 = "1";
+            testobj.state = "on";
+            data.AddMessageToTable(testobj);
+            MessageObject[] obj = data.GetMessage(1);
+            string t = obj[0].Json(data);
+            Console.WriteLine(t);
+        }
     }
 }
