@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
+using System.Net;
 
 namespace CRAPserver
 {
@@ -59,7 +60,7 @@ namespace CRAPserver
             MessageStackCommand.ExecuteNonQuery();
             SQLiteCommand stateTypeCommand = new SQLiteCommand(stateType, Connection);
             stateTypeCommand.ExecuteNonQuery();
-
+            
 
         }
 
@@ -103,13 +104,13 @@ namespace CRAPserver
                 return 0;
             }
         }
-        public string GetIPAddress(int NodeID)
+        public IPAddress getIPAddress(int NodeID)
         {
             string getIP = "select * from NodesTable where NodeID = " + NodeID.ToString();
             SQLiteCommand command = new SQLiteCommand(getIP, SQLiteConnection);
             SQLiteDataReader reader = command.ExecuteReader();
             reader.Read();
-            return reader["IP"].ToString();
+            return IPAddress.Parse(reader["IP"].ToString());
         }
         public int AddMessageToTable(MessageObject stateobj)
         {
@@ -137,7 +138,7 @@ namespace CRAPserver
             SQLiteDataReader reader = command.ExecuteReader();
             reader.Read();
             int arraysize = Int32.Parse(reader[0].ToString());
-
+            
             //create object
             MessageObject[] returnobj = new MessageObject[arraysize];
             string getMessages = "select * from MessageTable where NodeID = " + NodeID.ToString();
@@ -145,20 +146,20 @@ namespace CRAPserver
             SQLiteDataReader objReader = commandobj.ExecuteReader();
             int i = 0;
             while (objReader.Read())
-            {
-                MessageObject read = new MessageObject();
-                read.nodeid = Int32.Parse(objReader["NodeID"].ToString());
-                read.ttl = Int32.Parse(objReader["ttl"].ToString());
-                read.statetype1 = objReader["State_1"].ToString();
-                read.statetype2 = objReader["State_2"].ToString();
-                read.statetype3 = objReader["State_3"].ToString();
-                read.statetype4 = objReader["State_4"].ToString();
-                read.statetype5 = objReader["State_5"].ToString();
-                read.statetype6 = objReader["State_6"].ToString();
-                read.state = objReader["State"].ToString();
-                returnobj[i] = read;
+           {
+               MessageObject read = new MessageObject();
+               read.nodeid = Int32.Parse(objReader["NodeID"].ToString());
+               read.ttl = Int32.Parse(objReader["ttl"].ToString());
+               read.statetype1 = objReader["State_1"].ToString();
+               read.statetype2 = objReader["State_2"].ToString();
+               read.statetype3 = objReader["State_3"].ToString();
+               read.statetype4 = objReader["State_4"].ToString();
+               read.statetype5 = objReader["State_5"].ToString();
+               read.statetype6 = objReader["State_6"].ToString();
+               read.state = objReader["State"].ToString();
+               returnobj[i] = read;
                 i++;
-            }
+           }
             return returnobj;
 
         }
