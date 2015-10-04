@@ -3,25 +3,43 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CRAPserver
 {
-    public class HTTPServer
+    class HTTPServer
     {
         private HttpListener listener;
+        private Data dataObject;
         private MainView mainViewForm;
         private AddToLogFunctionDelegate addToLogDelegate;
+        /*
+        private AddStateDelegate addStateDelegate;
+        private GetStateTypeDelegate getStateTypeDelegate;
+        private AddNodeDelegate addNodeDelegate;
+        private GetIPAddressDelegate getIPAddressDelegate;
+        private AddMessageToTableDelegate addMessageToTableDelegate;
+        private GetMessageDelegate getMessageDelegate;*/
 
-        public HTTPServer(MainView mv, AddToLogFunctionDelegate del)
+        public HTTPServer(MainView mv, AddToLogFunctionDelegate delATLF, Data dat)
+            /*,
+            AddStateDelegate delAS, GetStateTypeDelegate delGST, AddNodeDelegate delAN, GetIPAddressDelegate delGIA, AddMessageToTableDelegate delAMTT, GetMessageDelegate delGM)*/
         {
             // Creates new HTTP listener object
             listener = new HttpListener();
             listener.Prefixes.Add("http://*:6372/");
 
             mainViewForm = mv;
-            addToLogDelegate = del;
+            dataObject = dat;
+            addToLogDelegate = delATLF;
+            /*addStateDelegate = delAS;
+            getStateTypeDelegate = delGST;
+            addNodeDelegate = delAN;
+            getIPAddressDelegate = delGIA;
+            addMessageToTableDelegate = delAMTT;
+            getMessageDelegate = delGM;*/
         }
 
         public void Start()
@@ -58,7 +76,7 @@ namespace CRAPserver
             response = context.Response;
 
             AsyncProcessing(listener);
-            
+
             string UriRequest = context.Request.Url.AbsoluteUri;
             string LocalPathRequest = context.Request.Url.LocalPath;
             HTTPGetArgumentParse ParsedURI = new HTTPGetArgumentParse(UriRequest);
@@ -71,7 +89,9 @@ namespace CRAPserver
                 if (ParsedURI.getType() == 0)
                 {
                     // Command recieved
-
+                    dataObject.GetIPAddress(ParsedURI.getNodeID());
+                    IPAddress ipAddress = 
+                    Socket client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 }
                 else if (ParsedURI.getType() == 1)
                 {
