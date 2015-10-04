@@ -81,13 +81,21 @@ namespace CRAPserver
             }
 
         }
-        public string GetStateType(string StateID)
+        public string GetStateTypefromID(string StateID)
         {
             string Statetype = "select * from stateType where StateID = " + StateID;
             SQLiteCommand command = new SQLiteCommand(Statetype, SQLiteConnection);
             SQLiteDataReader reader = command.ExecuteReader();
             reader.Read();
             return reader["StateType"].ToString();
+        }
+        public string GetStateTypefromType(string StateType)
+        {
+            string Statetype = "select * from stateType where StateID = " + StateType;
+            SQLiteCommand command = new SQLiteCommand(Statetype, SQLiteConnection);
+            SQLiteDataReader reader = command.ExecuteReader();
+            reader.Read();
+            return reader["StateID"].ToString();
         }
         public int AddNode(int NodeID, int Type, string IP, string name)
         {
