@@ -28,7 +28,9 @@ namespace CRAPserver
         {
             server = new HTTPServer(this, addToLogDelegate);
             Data testData = new Data();
-            testData.AddNode(12345678, 87654321, "192.168.1.1", "Dave the CRAPnode");
+           int t= testData.AddNode(12345678, 87654321, "192.168.1.1", "Dave the CRAPnode");
+           string test = testData.getIPAddress(12345678);
+           Console.WriteLine("Ip Address =" + test);
         }
 
         private void btnStart_Click(object sender, EventArgs e)
