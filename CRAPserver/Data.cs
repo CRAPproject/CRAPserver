@@ -11,11 +11,6 @@ namespace CRAPserver
 {
     class Data
     {
-        ~Data()
-        {
-            CRAPCOnnection.Close();
-
-        }
         string DatabaseFile = "CRAPData.sqlite";
         SQLiteConnection CRAPCOnnection;
         public Data()
@@ -33,6 +28,11 @@ namespace CRAPserver
                 CRAPCOnnection = new SQLiteConnection("Data Source =" + DatabaseFile + ";Version=3;");
                 CreateTables(CRAPCOnnection);
             }
+
+        }
+        ~Data()
+        {
+            CRAPCOnnection.Close();
 
         }
         private static void CreateTables( SQLiteConnection Connection)

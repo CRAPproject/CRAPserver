@@ -25,7 +25,7 @@ namespace CRAPserver
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainView());
-
+            
             Data testData = new Data();
             testData.AddNode(12345678, 87654321, "192.168.1.1", "Dave the CRAPnode");
         }
