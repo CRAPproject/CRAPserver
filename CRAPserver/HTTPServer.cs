@@ -18,7 +18,7 @@ namespace CRAPserver
         {
             // Creates new HTTP listener object
             listener = new HttpListener();
-            listener.Prefixes.Add("http://localhost:8080/");
+            listener.Prefixes.Add("http://*:6372/");
 
             mainViewForm = mv;
             addToLogDelegate = del;
@@ -58,20 +58,29 @@ namespace CRAPserver
             response = context.Response;
 
             AsyncProcessing(listener);
+            
+            string UriRequest = context.Request.Url.AbsoluteUri;
+            string LocalPathRequest = context.Request.Url.LocalPath;
+            HTTPGetArgumentParse ParsedURI = new HTTPGetArgumentParse(UriRequest);
 
-            // Extract request and serve up an error page if not json
-            string jsonRequest = context.Request.Url.LocalPath;
             byte[] buffer = null;
 
-            if (jsonRequest.Length == 7 && jsonRequest.Substring(0, 7).Equals("/a.crap"))
+
+            if (LocalPathRequest.Length == 7 && LocalPathRequest.Substring(0, 7).Equals("/a.crap"))
             {
-                string page = Directory.GetCurrentDirectory() + "\\index2.html";
-                // Read file
-                TextReader tr = new StreamReader(page);
-                string msg = tr.ReadToEnd();
+                if (ParsedURI.getType() == 0)
+                {
+                    // Command recieved
+
+                }
+                else if (ParsedURI.getType() == 1)
+                {
+                    // Update recieved
+
+                }
 
                 // Put the file in the buffer, and send to the client
-                buffer = Encoding.UTF8.GetBytes(msg);
+                buffer = Encoding.UTF8.GetBytes("<html><body><h1>NodeID: " + ParsedURI.getNodeID().ToString() + "</h></body></html>");
                 mainViewForm.Invoke(addToLogDelegate, "Legitimate request made.");
             }
             else
@@ -90,7 +99,6 @@ namespace CRAPserver
             response.ContentLength64 = buffer.Length;
             Stream st = response.OutputStream;
             st.Write(buffer, 0, buffer.Length);
-
             context.Response.Close();
         }
     }
